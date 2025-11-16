@@ -16,16 +16,18 @@ import model.MainObserver;
  *
  * @author pramuditha-lakshan
  */
-public class Tank extends javax.swing.JFrame implements MainObserver{
+public class Tank extends javax.swing.JFrame implements MainObserver {
+
     private Controller controller;
     private MainController mainController;
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
     /**
      * Creates new form Tank
      */
     public Tank(Controller controller, MainController mainController) {
         initComponents();
-        this.controller=controller;
+        this.controller = controller;
         txtArea.setEditable(false);
         FlatLightFlatIJTheme.setup();
         this.mainController = mainController;
@@ -38,7 +40,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
 
     @Override
     public void updateMessage(String message) {
-        txtArea.append(message+"\n");
+        txtArea.append(message + "\n");
     }
 
     @Override
@@ -52,37 +54,38 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
 
     @Override
     public void buttonEnable(int value) {
-       jSlider1.setValue(value);
-        jLabel3.setText(value+"");
-        if (value >= 0 || 25 <= value) {
-            btnShoot.setEnabled(true);
-            btnMissile.setEnabled(false);
-            btnRedar.setEnabled(false);
-            btnRotate.setEnabled(false);
-        }
-        if (value >= 26 || 50 <= value) {
-            btnShoot.setEnabled(false);
-            btnMissile.setEnabled(true);
-            btnRedar.setEnabled(false);
-            btnRotate.setEnabled(false);
-        } 
+        if (positionCheckBox.isSelected() == true) {
+            jSlider1.setValue(value);
+            jLabel3.setText(value + "");
+            if (value >= 0 || 25 <= value) {
+                btnShoot.setEnabled(true);
+                btnMissile.setEnabled(false);
+                btnRedar.setEnabled(false);
+                btnRotate.setEnabled(false);
+            }
+            if (value >= 26 || 50 <= value) {
+                btnShoot.setEnabled(false);
+                btnMissile.setEnabled(true);
+                btnRedar.setEnabled(false);
+                btnRotate.setEnabled(false);
+            }
 
-        if(value>=51 || 75<=value){
-            btnShoot.setEnabled(false);
-            btnMissile.setEnabled(false);
-            btnRedar.setEnabled(true);
-            btnRotate.setEnabled(false);
-        }
-        
-        if(value>=76){
-            btnShoot.setEnabled(false);
-            btnMissile.setEnabled(false);
-            btnRedar.setEnabled(false);
-            btnRotate.setEnabled(true);
+            if (value >= 51 || 75 <= value) {
+                btnShoot.setEnabled(false);
+                btnMissile.setEnabled(false);
+                btnRedar.setEnabled(true);
+                btnRotate.setEnabled(false);
+            }
+
+            if (value >= 76) {
+                btnShoot.setEnabled(false);
+                btnMissile.setEnabled(false);
+                btnRedar.setEnabled(false);
+                btnRotate.setEnabled(true);
+            }
         }
     }
-    
-  
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,7 +104,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
         jSpinner2 = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        positionCheckBox = new javax.swing.JCheckBox();
         lblArea = new javax.swing.JLabel();
         btnShoot = new javax.swing.JButton();
         btnMissile = new javax.swing.JButton();
@@ -134,8 +137,8 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
         jLabel2.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel2.setText("Ammo Count");
 
-        jCheckBox1.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jCheckBox1.setText("Position");
+        positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        positionCheckBox.setText("Position");
 
         lblArea.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         lblArea.setText("Area Not Cleared");
@@ -181,7 +184,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
                                         .addComponent(btnRotate, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox1)
+                                    .addComponent(positionCheckBox)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel1)
                                         .addGap(76, 76, 76)
@@ -221,7 +224,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRotate)
                     .addComponent(btnRedar)
-                    .addComponent(jCheckBox1))
+                    .addComponent(positionCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -243,9 +246,9 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-      mainController.getTankMessage(time+" - "+txtField.getText());
+        mainController.getTankMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton5ActionPerformed
- 
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMissile;
@@ -253,7 +256,6 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
     private javax.swing.JButton btnRotate;
     private javax.swing.JButton btnShoot;
     private javax.swing.JButton jButton5;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -262,6 +264,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver{
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
     private javax.swing.JLabel lblArea;
+    private javax.swing.JCheckBox positionCheckBox;
     private javax.swing.JTextArea txtArea;
     private javax.swing.JTextField txtField;
     // End of variables declaration//GEN-END:variables

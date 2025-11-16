@@ -16,7 +16,7 @@ import model.MainObserver;
  * @author pramuditha-lakshan
  */
 public class Helicopter extends javax.swing.JFrame implements MainObserver {
-    
+
     private Controller controller;
     private MainController mainController;
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -35,12 +35,12 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
         btnMissile.setEnabled(false);
         jSlider2.setEnabled(false);
     }
-    
+
     @Override
     public void updateMessage(String message) {
         txtArea.append(message + "\n");
     }
-    
+
     @Override
     public void clearArea(boolean clear) {
         if (clear == true) {
@@ -49,26 +49,28 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
             lblArea.setText("Area Not Cleared");
         }
     }
-    
+
     @Override
     public void buttonEnable(int value) {
-        jSlider2.setValue(value);
-        jLabel1.setText(value+"");
-        if (value >= 0 || 30 <= value) {
-            btnShoot.setEnabled(true);
-            btnLaser.setEnabled(false);
-            btnMissile.setEnabled(false);
-        }
-        if (value >= 31 || 60 <= value) {
-            btnLaser.setEnabled(true);
-            btnShoot.setEnabled(false);
-            btnMissile.setEnabled(false);
-        } 
+        if (positionCheckBox.isSelected()==true) {
+            jSlider2.setValue(value);
+            jLabel1.setText(value + "");
+            if (value >= 0 || 30 <= value) {
+                btnShoot.setEnabled(true);
+                btnLaser.setEnabled(false);
+                btnMissile.setEnabled(false);
+            }
+            if (value >= 31 || 60 <= value) {
+                btnLaser.setEnabled(true);
+                btnShoot.setEnabled(false);
+                btnMissile.setEnabled(false);
+            }
 
-        if(value>=61){
-            btnMissile.setEnabled(true);
-            btnLaser.setEnabled(false);
-            btnShoot.setEnabled(false);
+            if (value >= 61) {
+                btnMissile.setEnabled(true);
+                btnLaser.setEnabled(false);
+                btnShoot.setEnabled(false);
+            }
         }
     }
 
@@ -93,7 +95,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
         jLabel6 = new javax.swing.JLabel();
         jSpinner3 = new javax.swing.JSpinner();
         jSpinner4 = new javax.swing.JSpinner();
-        jCheckBox2 = new javax.swing.JCheckBox();
+        positionCheckBox = new javax.swing.JCheckBox();
         jSlider2 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
 
@@ -134,8 +136,8 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
 
         jSpinner4.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
 
-        jCheckBox2.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jCheckBox2.setText("Position");
+        positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        positionCheckBox.setText("Position");
 
         jSlider2.setOrientation(javax.swing.JSlider.VERTICAL);
         jSlider2.setPaintLabels(true);
@@ -159,7 +161,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                             .addComponent(btnShoot, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox2)
+                            .addComponent(positionCheckBox)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel6)
@@ -204,7 +206,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                             .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
                         .addGap(18, 18, 18)
-                        .addComponent(jCheckBox2))
+                        .addComponent(positionCheckBox))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(btnShoot)
@@ -240,7 +242,6 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private javax.swing.JButton btnMissile;
     private javax.swing.JButton btnShoot;
     private javax.swing.JButton jButton10;
-    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -249,6 +250,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private javax.swing.JSpinner jSpinner3;
     private javax.swing.JSpinner jSpinner4;
     private javax.swing.JLabel lblArea;
+    private javax.swing.JCheckBox positionCheckBox;
     private javax.swing.JTextArea txtArea;
     private javax.swing.JTextField txtField;
     // End of variables declaration//GEN-END:variables

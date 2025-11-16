@@ -14,30 +14,32 @@ import model.MainObserver;
  *
  * @author pramuditha-lakshan
  */
-public class Submarine extends javax.swing.JFrame implements MainObserver{
+public class Submarine extends javax.swing.JFrame implements MainObserver {
+
     private Controller controller;
     private MainController mainController;
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
     /**
      * Creates new form Submarine
      */
-    public Submarine(Controller controller,MainController mainController) {
+    public Submarine(Controller controller, MainController mainController) {
         initComponents();
-        this.controller=controller;
+        this.controller = controller;
         txtArea.setEditable(false);
         FlatLightFlatIJTheme.setup();
         this.mainController = mainController;
-       
+
     }
 
     @Override
     public void updateMessage(String message) {
-         txtArea.append(message);
+        txtArea.append(message);
     }
 
     @Override
     public void clearArea(boolean clear) {
-         if (clear == true) {
+        if (clear == true) {
             lblArea.setText("Area Cleared");
         } else {
             lblArea.setText("Area Not Cleared");
@@ -46,10 +48,38 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
 
     @Override
     public void buttonEnable(int value) {
-       
+        if (positionCheckBox.isSelected() == true) {
+            sliderPosition.setValue(value);
+            jLabel1.setText(value + "");
+            if (value >= 0 || 25 <= value) {
+                btnShoot.setEnabled(true);
+                btnSonar.setEnabled(false);
+                btnTomahawk.setEnabled(false);
+                btnTrident.setEnabled(false);
+            }
+            if (value >= 26 || 50 <= value) {
+                btnShoot.setEnabled(false);
+                btnSonar.setEnabled(true);
+                btnTomahawk.setEnabled(false);
+                btnTrident.setEnabled(false);
+            }
+
+            if (value >= 51 || 75 <= value) {
+                btnShoot.setEnabled(false);
+                btnSonar.setEnabled(false);
+                btnTomahawk.setEnabled(true);
+                btnTrident.setEnabled(false);
+            }
+
+            if (value >= 76) {
+                btnShoot.setEnabled(false);
+                btnSonar.setEnabled(false);
+                btnTomahawk.setEnabled(false);
+                btnTrident.setEnabled(true);
+            }
+        }
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,22 +91,24 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
 
         jLabel11 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        positionCheckBox = new javax.swing.JCheckBox();
         jSpinner5 = new javax.swing.JSpinner();
         jSpinner6 = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         lblArea = new javax.swing.JLabel();
-        jButton17 = new javax.swing.JButton();
-        jButton18 = new javax.swing.JButton();
-        jButton16 = new javax.swing.JButton();
-        jButton15 = new javax.swing.JButton();
+        btnSonar = new javax.swing.JButton();
+        btnTrident = new javax.swing.JButton();
+        btnTomahawk = new javax.swing.JButton();
+        btnShoot = new javax.swing.JButton();
         jSlider4 = new javax.swing.JSlider();
         jSlider3 = new javax.swing.JSlider();
         jButton14 = new javax.swing.JButton();
         txtField = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtArea = new javax.swing.JTextArea();
+        sliderPosition = new javax.swing.JSlider();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -86,8 +118,8 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
         jLabel10.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel10.setText("Energy");
 
-        jCheckBox3.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jCheckBox3.setText("Position");
+        positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        positionCheckBox.setText("Position");
 
         jLabel9.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel9.setText("Ammo Count");
@@ -98,21 +130,23 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
         lblArea.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         lblArea.setText("Area Not Cleared");
 
-        jButton17.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jButton17.setText("Sonar Operation");
+        btnSonar.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        btnSonar.setText("Sonar Operation");
 
-        jButton18.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jButton18.setText("Trident Missile");
+        btnTrident.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        btnTrident.setText("Trident Missile");
 
-        jButton16.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jButton16.setText("Tomahawk Missile");
+        btnTomahawk.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        btnTomahawk.setText("Tomahawk Missile");
 
-        jButton15.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jButton15.setText("Shoot");
+        btnShoot.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        btnShoot.setText("Shoot");
 
         jSlider4.setOrientation(javax.swing.JSlider.VERTICAL);
+        jSlider4.setValue(100);
 
         jSlider3.setOrientation(javax.swing.JSlider.VERTICAL);
+        jSlider3.setValue(100);
 
         jButton14.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
         jButton14.setText("Send");
@@ -127,6 +161,10 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
         txtArea.setRows(5);
         jScrollPane3.setViewportView(txtArea);
 
+        sliderPosition.setOrientation(javax.swing.JSlider.VERTICAL);
+
+        jLabel1.setText("Value");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,41 +173,43 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblArea)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButton17))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(279, 279, 279)))
+                                .addComponent(btnShoot, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSonar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnTomahawk, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnTrident, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(264, 264, 264))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblArea)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(txtField)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jButton14))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel8)
-                            .addComponent(jCheckBox3))
+                            .addComponent(positionCheckBox))
                         .addGap(67, 67, 67))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtField)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton14))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jSlider3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(105, 105, 105))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(73, 73, 73)))))
+                        .addComponent(sliderPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(118, 118, 118)
+                        .addComponent(jSlider3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
+                        .addComponent(jLabel10)
+                        .addGap(17, 17, 17)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jSpinner6, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                     .addComponent(jSpinner5)
@@ -195,12 +235,12 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
                     .addGroup(layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton17)
-                            .addComponent(jButton15))
+                            .addComponent(btnSonar)
+                            .addComponent(btnShoot))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton16)
-                            .addComponent(jButton18))
+                            .addComponent(btnTomahawk)
+                            .addComponent(btnTrident))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
@@ -217,17 +257,19 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel9)))
                         .addGap(18, 18, 18)
-                        .addComponent(jCheckBox3)
+                        .addComponent(positionCheckBox)
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
-                            .addComponent(jLabel10))
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSlider3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jSlider4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())))))
+                                .addContainerGap())
+                            .addComponent(sliderPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
 
         pack();
@@ -235,18 +277,17 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        mainController.getSubmarineMessage(time+" - "+txtArea.getText());
+        mainController.getSubmarineMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton14ActionPerformed
 
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnShoot;
+    private javax.swing.JButton btnSonar;
+    private javax.swing.JButton btnTomahawk;
+    private javax.swing.JButton btnTrident;
     private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton18;
-    private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel8;
@@ -257,6 +298,8 @@ public class Submarine extends javax.swing.JFrame implements MainObserver{
     private javax.swing.JSpinner jSpinner5;
     private javax.swing.JSpinner jSpinner6;
     private javax.swing.JLabel lblArea;
+    private javax.swing.JCheckBox positionCheckBox;
+    private javax.swing.JSlider sliderPosition;
     private javax.swing.JTextArea txtArea;
     private javax.swing.JTextField txtField;
     // End of variables declaration//GEN-END:variables

@@ -19,6 +19,9 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     private Controller controller;
     private MainController mainController;
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+    private int soldierCount;
+    private int ammoCount;
+    private int fuel;
 
     /**
      * Creates new form Submarine
@@ -80,6 +83,22 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         }
     }
 
+    public String getSoldierCount() {
+        return soldierCount + "";
+    }
+
+    public String getAmmoCount() {
+        return ammoCount + "";
+    }
+
+    public String getFuel() {
+        return fuel + "";
+    }
+
+    public String getPosition() {
+        return sliderPosition.getValue() + "";
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,6 +139,18 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
 
         positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         positionCheckBox.setText("Position");
+
+        jSpinner5.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner5StateChanged(evt);
+            }
+        });
+
+        jSpinner6.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner6StateChanged(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel9.setText("Ammo Count");
@@ -279,6 +310,14 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         mainController.getSubmarineMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void jSpinner5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner5StateChanged
+       soldierCount++;
+    }//GEN-LAST:event_jSpinner5StateChanged
+
+    private void jSpinner6StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner6StateChanged
+       ammoCount++;
+    }//GEN-LAST:event_jSpinner6StateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

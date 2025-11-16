@@ -217,6 +217,9 @@
           <Font name="Liberation Sans" size="24" style="1"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinner3StateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSpinner" name="jSpinner4">
       <Properties>
@@ -224,6 +227,9 @@
           <Font name="Liberation Sans" size="24" style="1"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinner4StateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="positionCheckBox">
       <Properties>

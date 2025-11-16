@@ -21,6 +21,10 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     private Controller controller;
     private MainController mainController;
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+    private int soldierCount;
+    private int ammoCount;
+    private int fuel;
+
 
     /**
      * Creates new form Tank
@@ -86,6 +90,22 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
         }
     }
 
+    public String getSoldierCount() {
+        return soldierCount + "";
+    }
+
+    public String getAmmoCount() {
+        return ammoCount + "";
+    }
+
+    public String getFuel() {
+        return fuel + "";
+    }
+
+    public String getPosition() {
+        return jSlider1.getValue() + "";
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -129,7 +149,19 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
 
         jSlider1.setOrientation(javax.swing.JSlider.VERTICAL);
 
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner1StateChanged(evt);
+            }
+        });
+
         txtField.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
+
+        jSpinner2.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner2StateChanged(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel1.setText("Soldier Count");
@@ -248,6 +280,14 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         mainController.getTankMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
+        ammoCount++;
+    }//GEN-LAST:event_jSpinner1StateChanged
+
+    private void jSpinner2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner2StateChanged
+        soldierCount++;
+    }//GEN-LAST:event_jSpinner2StateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

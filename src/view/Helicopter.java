@@ -20,6 +20,9 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private Controller controller;
     private MainController mainController;
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+    private int soldierCount;
+    private int ammoCount;
+    private int fuel;
 
     /**
      * Creates new form Helicopter
@@ -52,7 +55,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
 
     @Override
     public void buttonEnable(int value) {
-        if (positionCheckBox.isSelected()==true) {
+        if (positionCheckBox.isSelected() == true) {
             jSlider2.setValue(value);
             jLabel1.setText(value + "");
             if (value >= 0 || 30 <= value) {
@@ -72,6 +75,22 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                 btnShoot.setEnabled(false);
             }
         }
+    }
+
+    public String getSoldierCount() {
+        return soldierCount + "";
+    }
+
+    public String getAmmoCount() {
+        return ammoCount + "";
+    }
+
+    public String getFuel() {
+        return fuel + "";
+    }
+
+    public String getPosition() {
+        return jSlider2.getValue()+"";
     }
 
     /**
@@ -133,8 +152,18 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
         jLabel6.setText("Ammo Count");
 
         jSpinner3.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        jSpinner3.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner3StateChanged(evt);
+            }
+        });
 
         jSpinner4.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        jSpinner4.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner4StateChanged(evt);
+            }
+        });
 
         positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         positionCheckBox.setText("Position");
@@ -235,6 +264,14 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         mainController.getHelicoperMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jSpinner4StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner4StateChanged
+        soldierCount++;
+    }//GEN-LAST:event_jSpinner4StateChanged
+
+    private void jSpinner3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner3StateChanged
+       ammoCount++;
+    }//GEN-LAST:event_jSpinner3StateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

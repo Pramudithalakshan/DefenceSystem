@@ -8,6 +8,11 @@ import com.formdev.flatlaf.intellijthemes.FlatLightFlatIJTheme;
 import controller.Controller;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import model.MainObserver;
 
 /**
@@ -32,12 +37,16 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         txtArea.setEditable(false);
         FlatLightFlatIJTheme.setup();
         this.mainController = mainController;
+        btnShoot.setEnabled(false);
+        btnSonar.setEnabled(false);
+        btnTomahawk.setEnabled(false);
+        btnTrident.setEnabled(false);
 
     }
 
     @Override
     public void updateMessage(String message) {
-        txtArea.append(message);
+        txtArea.append(message+"\n");
     }
 
     @Override
@@ -97,6 +106,21 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
 
     public String getPosition() {
         return sliderPosition.getValue() + "";
+    }
+
+    public void playSound(String path) {
+        try {
+            AudioInputStream audio = AudioSystem.getAudioInputStream(getClass().getResource(path));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audio);
+            clip.start();
+        } catch (Exception ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void sendPrivateMessage(String message) {
+        txtArea.append(message + "\n");
     }
 
     /**
@@ -163,6 +187,11 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
 
         btnSonar.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         btnSonar.setText("Sonar Operation");
+        btnSonar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSonarActionPerformed(evt);
+            }
+        });
 
         btnTrident.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         btnTrident.setText("Trident Missile");
@@ -172,6 +201,11 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
 
         btnShoot.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         btnShoot.setText("Shoot");
+        btnShoot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShootActionPerformed(evt);
+            }
+        });
 
         jSlider4.setOrientation(javax.swing.JSlider.VERTICAL);
         jSlider4.setValue(100);
@@ -193,6 +227,7 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         jScrollPane3.setViewportView(txtArea);
 
         sliderPosition.setOrientation(javax.swing.JSlider.VERTICAL);
+        sliderPosition.setValue(0);
 
         jLabel1.setText("Value");
 
@@ -308,16 +343,25 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        playSound("/sounds/messageSend.wav");
         mainController.getSubmarineMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jSpinner5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner5StateChanged
-       soldierCount++;
+        soldierCount++;
     }//GEN-LAST:event_jSpinner5StateChanged
 
     private void jSpinner6StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner6StateChanged
-       ammoCount++;
+        ammoCount++;
     }//GEN-LAST:event_jSpinner6StateChanged
+
+    private void btnShootActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShootActionPerformed
+
+    }//GEN-LAST:event_btnShootActionPerformed
+
+    private void btnSonarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSonarActionPerformed
+        playSound("/sounds/Sonar.wav");
+    }//GEN-LAST:event_btnSonarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -113,9 +113,9 @@
                   <Group type="102" attributes="0">
                       <Component id="jScrollPane1" min="-2" pref="433" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jButton5" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtField" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="txtField" min="-2" pref="36" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                   </Group>
@@ -163,6 +163,7 @@
     <Component class="javax.swing.JSlider" name="jSlider1">
       <Properties>
         <Property name="orientation" type="int" value="1"/>
+        <Property name="value" type="int" value="0"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="jSpinner1">

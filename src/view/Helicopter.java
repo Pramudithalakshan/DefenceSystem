@@ -9,6 +9,11 @@ import com.formdev.flatlaf.intellijthemes.FlatLightFlatIJTheme;
 import controller.Controller;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import model.MainObserver;
 
 /**
@@ -30,13 +35,13 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     public Helicopter(Controller controller, MainController mainController) {
         initComponents();
         this.controller = controller;
-        FlatLightFlatIJTheme.setup();
         txtArea.setEditable(false);
         this.mainController = mainController;
         btnShoot.setEnabled(false);
         btnLaser.setEnabled(false);
         btnMissile.setEnabled(false);
         jSlider2.setEnabled(false);
+      
     }
 
     @Override
@@ -92,7 +97,21 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     public String getPosition() {
         return jSlider2.getValue()+"";
     }
-
+    
+    public void playSound(String path){
+        try {
+            AudioInputStream audio = AudioSystem.getAudioInputStream(getClass().getResource(path));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audio);
+            clip.start();
+        } catch (Exception ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void sendPrivateMessage(String message) {
+        txtArea.append(message + "\n");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -167,9 +186,15 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
 
         positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         positionCheckBox.setText("Position");
+        positionCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                positionCheckBoxActionPerformed(evt);
+            }
+        });
 
         jSlider2.setOrientation(javax.swing.JSlider.VERTICAL);
         jSlider2.setPaintLabels(true);
+        jSlider2.setValue(0);
 
         jLabel1.setText("Value");
 
@@ -262,6 +287,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        playSound("/sounds/messageSend.wav");
         mainController.getHelicoperMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton10ActionPerformed
 
@@ -272,6 +298,10 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private void jSpinner3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner3StateChanged
        ammoCount++;
     }//GEN-LAST:event_jSpinner3StateChanged
+
+    private void positionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionCheckBoxActionPerformed
+         playSound("/sounds/clickSound.wav");
+    }//GEN-LAST:event_positionCheckBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

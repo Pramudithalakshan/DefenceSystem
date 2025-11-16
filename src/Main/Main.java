@@ -4,6 +4,7 @@
  */
 package Main;
 
+import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
 import controller.Controller;
 import view.MainController;
 
@@ -14,6 +15,7 @@ import view.MainController;
 public class Main {
     public static void main(String[] args) {
         Controller controller = new Controller();
+        FlatCarbonIJTheme.setup();
         new MainController(controller).setVisible(true);
     }
     

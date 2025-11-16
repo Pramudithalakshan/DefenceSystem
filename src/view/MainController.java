@@ -3,37 +3,53 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+
 import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatLightFlatIJTheme;
 import controller.Controller;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import model.MainObserver;
 
 /**
  *
  * @author pramuditha-lakshan
  */
-public class MainController extends javax.swing.JFrame implements MainObserver{
+public class MainController extends javax.swing.JFrame implements MainObserver {
+
     private Controller controller;
     private Submarine submarine;
     private Tank tank;
     private Helicopter helicopter;
+
     /**
      * Creates new form Controller
      */
     public MainController(Controller controller) {
         initComponents();
         this.controller = controller;
-        tank = new Tank(controller,this);
-        submarine = new Submarine(controller,this); 
-        helicopter = new Helicopter(controller,this);
+        FlatCarbonIJTheme.setup();
+        submarine = new Submarine(controller, this);
+        FlatCarbonIJTheme.setup();
+        tank = new Tank(controller, this);
+        FlatCarbonIJTheme.setup();
+        helicopter = new Helicopter(controller, this);
         controller.add(tank);
         controller.add(submarine);
         controller.add(helicopter);
         ControllerTxtArea.setEditable(false);
-        //FlatCarbonIJTheme.setup();
+        ControllerTxtArea.setEditable(false);
+        txtHeliMsg.setEditable(false);
+        txtSubMsg.setEditable(false);
+        txtTankMsg.setEditable(false);
     }
-    
-     @Override
+
+    @Override
     public void updateMessage(String message) {
     }
 
@@ -44,20 +60,29 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
     @Override
     public void buttonEnable(int value) {
     }
-    
-    
-    public void getHelicoperMessage(String text){
-       txtHeliMsg.append(text+"\n");
-    }
-    
-    public void getTankMessage(String text){
-       txtTankMsg.append(text+"\n");
-    }
-    public void getSubmarineMessage(String text){
-       txtSubMsg.append(text+"\n");
+
+    public void getHelicoperMessage(String text) {
+        txtHeliMsg.append(text + "\n");
     }
 
+    public void getTankMessage(String text) {
+        txtTankMsg.append(text + "\n");
+    }
 
+    public void getSubmarineMessage(String text) {
+        txtSubMsg.append(text + "\n");
+    }
+
+    public void playSound(String path) {
+        try {
+            AudioInputStream audio = AudioSystem.getAudioInputStream(getClass().getResource(path));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audio);
+            clip.start();
+        } catch (Exception ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,7 +93,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jComboBox1 = new javax.swing.JComboBox<>();
+        observablesCheckBox = new javax.swing.JComboBox<>();
         jButton19 = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -101,8 +126,13 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jComboBox1.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Defence", "Helicopter", "Tank", "Submarine", " ", " " }));
+        observablesCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        observablesCheckBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Defence", "Helicopter", "Tank", "Submarine" }));
+        observablesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                observablesCheckBoxActionPerformed(evt);
+            }
+        });
 
         jButton19.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jButton19.setText("Collect Information");
@@ -144,6 +174,11 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
 
         privateComboBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         privateComboBox.setText("Send Private");
+        privateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                privateComboBoxActionPerformed(evt);
+            }
+        });
 
         jButton20.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jButton20.setText("Send");
@@ -179,7 +214,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
         txtTankMsg.setRows(5);
         jScrollPane7.setViewportView(txtTankMsg);
 
-        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
         jLabel2.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel2.setText("Helicopter");
@@ -262,7 +297,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel15)
                                     .addComponent(jLabel12)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(observablesCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel14)
                                     .addComponent(jLabel13))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -303,7 +338,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(observablesCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton19))
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -351,64 +386,97 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
-        if(privateComboBox.isSelected()==false){
-        String text = "Controller - "+txtMessage.getText();
-        ControllerTxtArea.append(text+"\n");
-        controller.updateUnites(text);
-        }else{
-         
+        String message = "Controller - " + txtMessage.getText();
+        if (observablesCheckBox.getSelectedIndex() == 0) {
+            playSound("/sounds/messageSend.wav");
+            ControllerTxtArea.append(message + "\n");
+            controller.updateUnites(message);
+            txtMessage.setText("");
+        } else {
+            playSound("/sounds/messageSend.wav");
+            if (observablesCheckBox.getSelectedIndex() == 1) {
+                helicopter.updateMessage(message);
+                txtMessage.setText("");
+                ControllerTxtArea.append(message + "\n");
+            }
+            if (observablesCheckBox.getSelectedIndex() == 2) {
+                tank.updateMessage(message);
+                txtMessage.setText("");
+                ControllerTxtArea.append(message + "\n");
+            }
+            if (observablesCheckBox.getSelectedIndex() == 3) {
+                submarine.updateMessage(message);
+                txtMessage.setText("");
+                ControllerTxtArea.append(message + "\n");
+            }
+
         }
+
     }//GEN-LAST:event_jButton20ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        playSound("/sounds/CheckBoxClick.wav");
         controller.sendAreaClearMessage(jCheckBox1.isSelected());
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-     helicopter.setVisible(true);
+        playSound("/sounds/clickSound.wav");
+        helicopter.setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        playSound("/sounds/clickSound.wav");
         tank.setVisible(true);
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        playSound("/sounds/clickSound.wav");
         submarine.setVisible(true);
     }//GEN-LAST:event_jLabel4MouseClicked
 
     private void jSlider5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider5StateChanged
-        controller.enableButtons(jSlider5.getValue());
+        int value = jSlider5.getValue();
+        playSound("/sounds/slider.wav");
+        controller.enableButtons(value);
     }//GEN-LAST:event_jSlider5StateChanged
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-      int observable = jComboBox1.getSelectedIndex();
-      if(observable==1){
-          lblSoldierCount.setText(helicopter.getSoldierCount());
-          lblAmmoCount.setText(helicopter.getAmmoCount());
-          lblFuel.setText(helicopter.getFuel());
-          lblPosition.setText(helicopter.getPosition());
-      }
-       if(observable==2){
-          lblSoldierCount.setText(tank.getSoldierCount());
-          lblAmmoCount.setText(tank.getAmmoCount());
-          lblFuel.setText(tank.getFuel());
-          lblPosition.setText(tank.getPosition());
-      }
-       if(observable==3){
-          lblSoldierCount.setText(submarine.getSoldierCount());
-          lblAmmoCount.setText(submarine.getAmmoCount());
-          lblFuel.setText(helicopter.getFuel());
-          lblPosition.setText(submarine.getPosition());
-      }
+        int observable = observablesCheckBox.getSelectedIndex();
+        playSound("/sounds/clickSound.wav");
+        if (observable == 1) {
+            lblSoldierCount.setText(helicopter.getSoldierCount());
+            lblAmmoCount.setText(helicopter.getAmmoCount());
+            lblFuel.setText(helicopter.getFuel());
+            lblPosition.setText(helicopter.getPosition());
+        }
+        if (observable == 2) {
+            lblSoldierCount.setText(tank.getSoldierCount());
+            lblAmmoCount.setText(tank.getAmmoCount());
+            lblFuel.setText(tank.getFuel());
+            lblPosition.setText(tank.getPosition());
+        }
+        if (observable == 3) {
+            lblSoldierCount.setText(submarine.getSoldierCount());
+            lblAmmoCount.setText(submarine.getAmmoCount());
+            lblFuel.setText(helicopter.getFuel());
+            lblPosition.setText(submarine.getPosition());
+        }
     }//GEN-LAST:event_jButton19ActionPerformed
- 
+
+    private void privateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateComboBoxActionPerformed
+        playSound("/sounds/CheckBoxClick.wav");
+    }//GEN-LAST:event_privateComboBoxActionPerformed
+
+    private void observablesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_observablesCheckBoxActionPerformed
+        playSound("/sounds/clickSound.wav");
+    }//GEN-LAST:event_observablesCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea ControllerTxtArea;
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton20;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -429,6 +497,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
     private javax.swing.JLabel lblFuel;
     private javax.swing.JLabel lblPosition;
     private javax.swing.JLabel lblSoldierCount;
+    private javax.swing.JComboBox<String> observablesCheckBox;
     private javax.swing.JCheckBox privateComboBox;
     private javax.swing.JTextArea txtHeliMsg;
     private javax.swing.JTextField txtMessage;
@@ -436,6 +505,4 @@ public class MainController extends javax.swing.JFrame implements MainObserver{
     private javax.swing.JTextArea txtTankMsg;
     // End of variables declaration//GEN-END:variables
 
-   
-     
 }

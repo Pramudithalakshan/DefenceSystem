@@ -10,6 +10,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import model.MainObserver;
 
 /**
@@ -25,7 +30,6 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     private int ammoCount;
     private int fuel;
 
-
     /**
      * Creates new form Tank
      */
@@ -33,7 +37,6 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
         initComponents();
         this.controller = controller;
         txtArea.setEditable(false);
-        FlatLightFlatIJTheme.setup();
         this.mainController = mainController;
         btnShoot.setEnabled(false);
         btnMissile.setEnabled(false);
@@ -106,6 +109,19 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
         return jSlider1.getValue() + "";
     }
 
+    public void playSound(String path) {
+        try {
+            AudioInputStream audio = AudioSystem.getAudioInputStream(getClass().getResource(path));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audio);
+            clip.start();
+        } catch (Exception ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void sendPrivateMessage(String message){
+    txtArea.append(message+"\n");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,6 +164,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
         jScrollPane1.setViewportView(txtArea);
 
         jSlider1.setOrientation(javax.swing.JSlider.VERTICAL);
+        jSlider1.setValue(0);
 
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -262,7 +279,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton5)
                             .addComponent(txtField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(55, 55, 55))
@@ -278,6 +295,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+         playSound("/sounds/messageSend.wav");
         mainController.getTankMessage(time + " - " + txtField.getText());
     }//GEN-LAST:event_jButton5ActionPerformed
 

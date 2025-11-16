@@ -228,6 +228,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Sonar Operation"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSonarActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnTrident">
       <Properties>
@@ -252,6 +255,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Shoot"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShootActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSlider" name="jSlider4">
       <Properties>
@@ -299,6 +305,7 @@
     <Component class="javax.swing.JSlider" name="sliderPosition">
       <Properties>
         <Property name="orientation" type="int" value="1"/>
+        <Property name="value" type="int" value="0"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">

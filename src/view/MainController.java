@@ -149,7 +149,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
         jLabel13.setText("Fuel Amount");
 
         jLabel14.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        jLabel14.setText("Ammo Amount");
+        jLabel14.setText("Ammo Count");
 
         jSlider5.setPaintLabels(true);
         jSlider5.setPaintTicks(true);

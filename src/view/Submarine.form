@@ -186,6 +186,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Position"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="positionCheckBoxActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSpinner" name="jSpinner5">
       <Events>

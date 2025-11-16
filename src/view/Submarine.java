@@ -41,6 +41,7 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         btnSonar.setEnabled(false);
         btnTomahawk.setEnabled(false);
         btnTrident.setEnabled(false);
+        sliderPosition.setEnabled(false);
 
     }
 
@@ -163,6 +164,11 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
 
         positionCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         positionCheckBox.setText("Position");
+        positionCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                positionCheckBoxActionPerformed(evt);
+            }
+        });
 
         jSpinner5.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -348,10 +354,12 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jSpinner5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner5StateChanged
+        playSound("/sounds/clickSound.wav");
         soldierCount++;
     }//GEN-LAST:event_jSpinner5StateChanged
 
     private void jSpinner6StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner6StateChanged
+        playSound("/sounds/clickSound.wav");
         ammoCount++;
     }//GEN-LAST:event_jSpinner6StateChanged
 
@@ -362,6 +370,10 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     private void btnSonarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSonarActionPerformed
         playSound("/sounds/Sonar.wav");
     }//GEN-LAST:event_btnSonarActionPerformed
+
+    private void positionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionCheckBoxActionPerformed
+        playSound("/sounds/CheckBoxClick.wav");
+    }//GEN-LAST:event_positionCheckBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

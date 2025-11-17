@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
 import model.MainObserver;
 
 /**
@@ -28,7 +29,10 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     private int soldierCount;
     private int ammoCount;
-    private int fuel;
+    private int fuel = 100;
+    private Clip clip;
+    private Thread engineThread;
+    private boolean engineRunning;
 
     /**
      * Creates new form Tank
@@ -43,6 +47,8 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
         btnRotate.setEnabled(false);
         btnRedar.setEnabled(false);
         jSlider1.setEnabled(false);
+        engineRunning();
+        fuelSpiner.setValue(100);
     }
 
     @Override
@@ -112,16 +118,48 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     public void playSound(String path) {
         try {
             AudioInputStream audio = AudioSystem.getAudioInputStream(getClass().getResource(path));
-            Clip clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audio);
             clip.start();
         } catch (Exception ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void sendPrivateMessage(String message){
-    txtArea.append(message+"\n");
+
+    public void sendPrivateMessage(String message) {
+        txtArea.append(message + "\n");
     }
+
+    private void stopSound() {
+        clip.stop();
+    }
+
+    public void engineRunning() {
+        if (engineRunning) {
+            return;
+        }
+        engineRunning = true;
+        engineThread = new Thread(() -> {
+            while (engineRunning) {
+                fuelSpiner.setValue(--fuel);
+                try {
+                    if ((int) fuelSpiner.getValue() <= 0) {
+                        engineRunning = false;
+                        playSound("/sounds/lowFuel.wav");
+                        mainController.getTankMessage("Tank - Need to refill");
+                        JOptionPane.showMessageDialog(this, "Refill the tank", "Low Fuel", JOptionPane.WARNING_MESSAGE);
+                        stopSound();
+                        break;
+                    }
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        engineThread.start();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,8 +185,11 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
         btnRedar = new javax.swing.JButton();
         btnRotate = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        fuelSpiner = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jButton5.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jButton5.setText("Send");
@@ -206,6 +247,9 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
 
         jLabel3.setText("Value");
 
+        jLabel4.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        jLabel4.setText("Fuel ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -215,12 +259,6 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblArea)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2)
-                                .addGap(84, 84, 84)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -235,9 +273,20 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(positionCheckBox)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(76, 76, 76)
-                                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGap(235, 235, 235)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jSpinner2, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                                            .addComponent(fuelSpiner)))
+                                    .addComponent(jLabel4)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblArea)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(84, 84, 84)
+                                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(106, 106, 106))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -264,17 +313,27 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
                     .addComponent(jLabel2)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnShoot)
-                    .addComponent(btnMissile)
-                    .addComponent(jLabel1)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRotate)
-                    .addComponent(btnRedar)
-                    .addComponent(positionCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnShoot)
+                        .addComponent(btnMissile)
+                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRotate)
+                            .addComponent(btnRedar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(fuelSpiner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addComponent(positionCheckBox)
+                .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -295,8 +354,10 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-         playSound("/sounds/messageSend.wav");
+        playSound("/sounds/messageSend.wav");
         mainController.getTankMessage(time + " - " + txtField.getText());
+        txtArea.append(time+" - "+ txtField.getText()+"\n");
+        txtField.setText("");
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
@@ -315,10 +376,12 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     private javax.swing.JButton btnRedar;
     private javax.swing.JButton btnRotate;
     private javax.swing.JButton btnShoot;
+    private javax.swing.JSpinner fuelSpiner;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JSpinner jSpinner1;

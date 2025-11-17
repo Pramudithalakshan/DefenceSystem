@@ -28,9 +28,10 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     private int soldierCount;
     private int ammoCount;
-    private int fuel = 5;
+    private int fuel=100;
     private Clip clip;
-
+    private boolean engineRunning = false;  
+    private Thread engineThread;
     /**
      * Creates new form Helicopter
      */
@@ -115,8 +116,6 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     public void sendPrivateMessage(String message) {
         txtArea.append(message + "\n");
     }
-    private boolean engineRunning = false;
-    private Thread engineThread;
 
     public void engineRunning() {
         if (engineRunning) {
@@ -126,6 +125,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
         engineThread = new Thread(() -> {
             while (engineRunning) {
                 fuelSpiner.setValue(--fuel);
+                fuel=(int)fuelSpiner.getValue();
                 try {
                     if ((int) fuelSpiner.getValue() <= 0) {
                         engineRunning = false; 
@@ -135,7 +135,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                         stopSound();
                         break; 
                     }
-                    Thread.sleep(2000); 
+                    Thread.sleep(1000); 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -174,6 +174,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
         jLabel1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         ammoSpiner1 = new javax.swing.JSpinner();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -261,6 +262,8 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
             }
         });
 
+        jLabel2.setText("Current Position - ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -303,11 +306,11 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                             .addComponent(jScrollPane2))
                         .addGap(117, 117, 117)
                         .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(278, 278, 278))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -332,7 +335,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(fuelSpiner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addComponent(positionCheckBox))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
@@ -341,9 +344,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnLaser)
                             .addComponent(btnMissile))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -351,7 +352,11 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton10)))
-                    .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(14, 14, 14))
         );
 
@@ -362,6 +367,8 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         playSound("/sounds/messageSend.wav");
         mainController.getHelicoperMessage(time + " - " + txtField.getText());
+        txtArea.append(time+" - "+ txtField.getText()+"\n");
+        txtField.setText("");
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jSpinner4StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner4StateChanged
@@ -411,6 +418,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     private javax.swing.JSpinner fuelSpiner;
     private javax.swing.JButton jButton10;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

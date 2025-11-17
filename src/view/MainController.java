@@ -125,6 +125,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         observablesCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         observablesCheckBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Defence", "Helicopter", "Tank", "Submarine" }));

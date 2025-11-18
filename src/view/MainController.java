@@ -14,6 +14,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JOptionPane;
 import model.MainObserver;
 
 /**
@@ -93,7 +94,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        observablesCheckBox = new javax.swing.JComboBox<>();
+        observablesComboBox = new javax.swing.JComboBox<>();
         jButton19 = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -104,7 +105,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
         ControllerTxtArea = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         txtHeliMsg = new javax.swing.JTextArea();
-        privateComboBox = new javax.swing.JCheckBox();
+        privateCheckBox = new javax.swing.JCheckBox();
         jButton20 = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         txtSubMsg = new javax.swing.JTextArea();
@@ -127,11 +128,11 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        observablesCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        observablesCheckBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Defence", "Helicopter", "Tank", "Submarine" }));
-        observablesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        observablesComboBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        observablesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Defence", "Helicopter", "Tank", "Submarine" }));
+        observablesComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                observablesCheckBoxActionPerformed(evt);
+                observablesComboBoxActionPerformed(evt);
             }
         });
 
@@ -173,11 +174,11 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
         txtHeliMsg.setRows(5);
         jScrollPane5.setViewportView(txtHeliMsg);
 
-        privateComboBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
-        privateComboBox.setText("Send Private");
-        privateComboBox.addActionListener(new java.awt.event.ActionListener() {
+        privateCheckBox.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        privateCheckBox.setText("Send Private");
+        privateCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                privateComboBoxActionPerformed(evt);
+                privateCheckBoxActionPerformed(evt);
             }
         });
 
@@ -298,7 +299,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel15)
                                     .addComponent(jLabel12)
-                                    .addComponent(observablesCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(observablesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel14)
                                     .addComponent(jLabel13))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -315,7 +316,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jCheckBox1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(privateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(privateCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtMessage)
@@ -339,7 +340,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(observablesCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(observablesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton19))
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -366,7 +367,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCheckBox1)
-                            .addComponent(privateComboBox))))
+                            .addComponent(privateCheckBox))))
                 .addGap(18, 18, 18)
                 .addComponent(jSlider5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
@@ -388,31 +389,38 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
 
     private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
         String message = "Controller - " + txtMessage.getText();
-        if (observablesCheckBox.getSelectedIndex() == 0) {
-            playSound("/sounds/messageSend.wav");
-            ControllerTxtArea.append(message + "\n");
-            controller.updateUnites(message);
-            txtMessage.setText("");
+        if (observablesComboBox.getSelectedIndex() == 0 && privateCheckBox.isSelected() == true) {
+            JOptionPane.showMessageDialog(this, "Select unit first to send private message");
         } else {
-            playSound("/sounds/messageSend.wav");
-            if (observablesCheckBox.getSelectedIndex() == 1) {
-                helicopter.updateMessage(message);
-                txtMessage.setText("");
-                ControllerTxtArea.append(message + "\n");
+            if (txtMessage.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "Enter message to send");
+            } else {
+                if (observablesComboBox.getSelectedIndex() == 0) {
+                    playSound("/sounds/messageSend.wav");
+                    ControllerTxtArea.append(message + "\n");
+                    controller.updateUnites(message);
+                    txtMessage.setText("");
+                } else {
+                    playSound("/sounds/messageSend.wav");
+                    if (observablesComboBox.getSelectedIndex() == 1) {
+                        helicopter.updateMessage(message);
+                        txtMessage.setText("");
+                        ControllerTxtArea.append(message + "\n");
+                    }
+                    if (observablesComboBox.getSelectedIndex() == 2) {
+                        tank.updateMessage(message);
+                        txtMessage.setText("");
+                        ControllerTxtArea.append(message + "\n");
+                    }
+                    if (observablesComboBox.getSelectedIndex() == 3) {
+                        submarine.updateMessage(message);
+                        txtMessage.setText("");
+                        ControllerTxtArea.append(message + "\n");
+                    }
+                    
+                }
             }
-            if (observablesCheckBox.getSelectedIndex() == 2) {
-                tank.updateMessage(message);
-                txtMessage.setText("");
-                ControllerTxtArea.append(message + "\n");
-            }
-            if (observablesCheckBox.getSelectedIndex() == 3) {
-                submarine.updateMessage(message);
-                txtMessage.setText("");
-                ControllerTxtArea.append(message + "\n");
-            }
-
         }
-
     }//GEN-LAST:event_jButton20ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -442,7 +450,7 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
     }//GEN-LAST:event_jSlider5StateChanged
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-        int observable = observablesCheckBox.getSelectedIndex();
+        int observable = observablesComboBox.getSelectedIndex();
         playSound("/sounds/clickSound.wav");
         if (observable == 1) {
             lblSoldierCount.setText(helicopter.getSoldierCount());
@@ -464,13 +472,15 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
         }
     }//GEN-LAST:event_jButton19ActionPerformed
 
-    private void privateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateComboBoxActionPerformed
-        playSound("/sounds/CheckBoxClick.wav");
-    }//GEN-LAST:event_privateComboBoxActionPerformed
+    private void privateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateCheckBoxActionPerformed
+        if (privateCheckBox.isSelected() == true) {
+            playSound("/sounds/CheckBoxClick.wav");
+        }
+    }//GEN-LAST:event_privateCheckBoxActionPerformed
 
-    private void observablesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_observablesCheckBoxActionPerformed
+    private void observablesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_observablesComboBoxActionPerformed
         playSound("/sounds/clickSound.wav");
-    }//GEN-LAST:event_observablesCheckBoxActionPerformed
+    }//GEN-LAST:event_observablesComboBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -498,8 +508,8 @@ public class MainController extends javax.swing.JFrame implements MainObserver {
     private javax.swing.JLabel lblFuel;
     private javax.swing.JLabel lblPosition;
     private javax.swing.JLabel lblSoldierCount;
-    private javax.swing.JComboBox<String> observablesCheckBox;
-    private javax.swing.JCheckBox privateComboBox;
+    private javax.swing.JComboBox<String> observablesComboBox;
+    private javax.swing.JCheckBox privateCheckBox;
     private javax.swing.JTextArea txtHeliMsg;
     private javax.swing.JTextField txtMessage;
     private javax.swing.JTextArea txtSubMsg;

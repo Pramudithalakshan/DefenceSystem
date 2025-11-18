@@ -408,6 +408,7 @@ public class Helicopter extends javax.swing.JFrame implements MainObserver {
     }//GEN-LAST:event_btnMissileActionPerformed
 
     private void ammoSpiner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ammoSpiner1StateChanged
+         playSound("/sounds/CheckBoxClick.wav");
         ammoCount++;
     }//GEN-LAST:event_ammoSpiner1StateChanged
 

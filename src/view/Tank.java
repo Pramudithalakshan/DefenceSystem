@@ -399,7 +399,7 @@ public class Tank extends javax.swing.JFrame implements MainObserver {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void ammoSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ammoSpinnerStateChanged
-        playSound("/sounds/clickSound.wav");
+        playSound("/sounds/CheckBoxClick.wav");
         ammoCount++;
     }//GEN-LAST:event_ammoSpinnerStateChanged
 

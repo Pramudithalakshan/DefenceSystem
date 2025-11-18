@@ -27,11 +27,14 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     private String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     private int soldierCount;
     private int ammoCount;
-    private int fuel;
+    private int fuel=100;
     private Clip clip;
     private Thread engineThread;
     private boolean engineRunning;
     private Thread resourcesThread;
+    private boolean isEmptyResources;
+    private int energy=100;
+    private int oxygen=100;
 
     /**
      * Creates new form Submarine
@@ -48,7 +51,9 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         btnTrident.setEnabled(false);
         sliderPosition.setEnabled(false);
         txtField.grabFocus();
-
+        fuelSpinner.setValue(100);
+        engineRunning();
+        resourcesManage();
     }
 
     @Override
@@ -133,7 +138,65 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     private void stopSound() {
         clip.stop();
     }
-
+     
+    public void engineRunning() {
+        if (engineRunning) {
+            return;
+        }
+        engineRunning = true;
+        engineThread = new Thread(() -> {
+            while (engineRunning) {
+                fuelSpinner.setValue(--fuel);
+                try {
+                    if ((int) fuelSpinner.getValue() <= 0) {
+                        engineRunning = false;
+                        playSound("/sounds/lowFuel.wav");
+                        mainController.getTankMessage("Submarine - Need to refill");
+                        JOptionPane.showMessageDialog(this, "Refill the submarine", "Low Fuel", JOptionPane.WARNING_MESSAGE);
+                        stopSound();
+                        break;
+                    }
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        engineThread.start();
+    }
+    
+    public void resourcesManage(){
+       if (isEmptyResources) {
+            return;
+        }
+        isEmptyResources = true;
+        resourcesThread = new Thread(() -> {
+            while (isEmptyResources) {
+                energySlider.setValue(--energy);
+                oxygenSlider.setValue(--oxygen);
+                try {
+                    if ((int) energySlider.getValue() <= 0 || oxygenSlider.getValue() <=0 ){
+                        isEmptyResources = false;
+                        playSound("/sounds/warning.wav");
+                        mainController.getSubmarineMessage("Submarine - Need to refill resources");
+                        JOptionPane.showMessageDialog(this, "In danger limited resources", "Limited resources", JOptionPane.WARNING_MESSAGE);
+                        stopSound();
+                        break;
+                    }
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        resourcesThread.start();
+    }
+    private void refillResources(){
+      
+      energy=energySlider.getValue();
+      oxygen=oxygenSlider.getValue();
+      resourcesManage();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,7 +210,7 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         jLabel10 = new javax.swing.JLabel();
         positionCheckBox = new javax.swing.JCheckBox();
         jSpinner5 = new javax.swing.JSpinner();
-        jSpinner6 = new javax.swing.JSpinner();
+        ammoSpinner = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         lblArea = new javax.swing.JLabel();
@@ -155,8 +218,8 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         btnTrident = new javax.swing.JButton();
         btnTomahawk = new javax.swing.JButton();
         btnShoot = new javax.swing.JButton();
-        jSlider4 = new javax.swing.JSlider();
-        jSlider3 = new javax.swing.JSlider();
+        oxygenSlider = new javax.swing.JSlider();
+        energySlider = new javax.swing.JSlider();
         jButton14 = new javax.swing.JButton();
         txtField = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -164,6 +227,8 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         sliderPosition = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        fuelSpinner = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -182,15 +247,17 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
             }
         });
 
+        jSpinner5.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jSpinner5.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner5StateChanged(evt);
             }
         });
 
-        jSpinner6.addChangeListener(new javax.swing.event.ChangeListener() {
+        ammoSpinner.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        ammoSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSpinner6StateChanged(evt);
+                ammoSpinnerStateChanged(evt);
             }
         });
 
@@ -213,9 +280,19 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
 
         btnTrident.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         btnTrident.setText("Trident Missile");
+        btnTrident.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTridentActionPerformed(evt);
+            }
+        });
 
         btnTomahawk.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         btnTomahawk.setText("Tomahawk Missile");
+        btnTomahawk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTomahawkActionPerformed(evt);
+            }
+        });
 
         btnShoot.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         btnShoot.setText("Shoot");
@@ -225,11 +302,21 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
             }
         });
 
-        jSlider4.setOrientation(javax.swing.JSlider.VERTICAL);
-        jSlider4.setValue(100);
+        oxygenSlider.setOrientation(javax.swing.JSlider.VERTICAL);
+        oxygenSlider.setValue(100);
+        oxygenSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                oxygenSliderStateChanged(evt);
+            }
+        });
 
-        jSlider3.setOrientation(javax.swing.JSlider.VERTICAL);
-        jSlider3.setValue(100);
+        energySlider.setOrientation(javax.swing.JSlider.VERTICAL);
+        energySlider.setValue(100);
+        energySlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                energySliderStateChanged(evt);
+            }
+        });
 
         jButton14.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
         jButton14.setText("Send");
@@ -245,11 +332,25 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         jScrollPane3.setViewportView(txtArea);
 
         sliderPosition.setOrientation(javax.swing.JSlider.VERTICAL);
+        sliderPosition.setPaintLabels(true);
+        sliderPosition.setPaintTicks(true);
+        sliderPosition.setSnapToTicks(true);
+        sliderPosition.setToolTipText("20");
         sliderPosition.setValue(0);
 
         jLabel1.setText("Value");
 
         jLabel2.setText("Current Position -");
+
+        jLabel12.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        jLabel12.setText("Fuel");
+
+        fuelSpinner.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
+        fuelSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                fuelSpinnerStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -269,25 +370,27 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
                                 .addComponent(btnTomahawk, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnTrident, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(264, 264, 264))
-                    .addComponent(lblArea)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtField)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton14))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addComponent(sliderPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblArea)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(txtField)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButton14))
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                                .addComponent(sliderPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(12, 12, 12)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel9)
-                                .addComponent(jLabel8))
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel12))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -296,17 +399,18 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel1)))
                         .addGap(36, 36, 36)
-                        .addComponent(jSlider3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(energySlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jSpinner6, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                                    .addComponent(jSpinner5))
-                                .addGap(80, 80, 80))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jSlider4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(52, 52, 52))))
+                                .addComponent(oxygenSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(52, 52, 52))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(fuelSpinner)
+                                    .addComponent(ammoSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                                    .addComponent(jSpinner5, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(80, 80, 80))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(44, 44, 44)
@@ -335,7 +439,7 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnTomahawk)
                             .addComponent(btnTrident))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -350,8 +454,12 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ammoSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9))
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(fuelSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(88, 88, 88)
@@ -360,9 +468,9 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
                                     .addComponent(jLabel10))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSlider3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(energySlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jSlider4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(oxygenSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addContainerGap())))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(58, 58, 58)
@@ -394,13 +502,20 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
         soldierCount++;
     }//GEN-LAST:event_jSpinner5StateChanged
 
-    private void jSpinner6StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner6StateChanged
-        playSound("/sounds/clickSound.wav");
+    private void ammoSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ammoSpinnerStateChanged
+       playSound("/sounds/CheckBoxClick.wav");
         ammoCount++;
-    }//GEN-LAST:event_jSpinner6StateChanged
+    }//GEN-LAST:event_ammoSpinnerStateChanged
 
     private void btnShootActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShootActionPerformed
-        playSound("/sound/shoot.wav");
+       int ammo = (int) ammoSpinner.getValue();
+        if (ammo == 0) {
+            JOptionPane.showMessageDialog(this, "Low Ammo");
+        } else {
+            ammoSpinner.setValue(--ammoCount);
+            playSound("/sounds/Shoot.wav");
+        }
+
     }//GEN-LAST:event_btnShootActionPerformed
 
     private void btnSonarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSonarActionPerformed
@@ -408,28 +523,50 @@ public class Submarine extends javax.swing.JFrame implements MainObserver {
     }//GEN-LAST:event_btnSonarActionPerformed
 
     private void positionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionCheckBoxActionPerformed
-        playSound("/sounds/CheckBoxClick.wav");
+        playSound("/sounds/clickSound.wav");
     }//GEN-LAST:event_positionCheckBoxActionPerformed
+
+    private void fuelSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_fuelSpinnerStateChanged
+        fuel++;
+    }//GEN-LAST:event_fuelSpinnerStateChanged
+
+    private void energySliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_energySliderStateChanged
+       refillResources();
+    }//GEN-LAST:event_energySliderStateChanged
+
+    private void oxygenSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_oxygenSliderStateChanged
+        refillResources();
+    }//GEN-LAST:event_oxygenSliderStateChanged
+
+    private void btnTomahawkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTomahawkActionPerformed
+        playSound("/sounds/missile.wav");
+    }//GEN-LAST:event_btnTomahawkActionPerformed
+
+    private void btnTridentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTridentActionPerformed
+         playSound("/sounds/missile.wav");
+    }//GEN-LAST:event_btnTridentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner ammoSpinner;
     private javax.swing.JButton btnShoot;
     private javax.swing.JButton btnSonar;
     private javax.swing.JButton btnTomahawk;
     private javax.swing.JButton btnTrident;
+    private javax.swing.JSlider energySlider;
+    private javax.swing.JSpinner fuelSpinner;
     private javax.swing.JButton jButton14;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JSlider jSlider3;
-    private javax.swing.JSlider jSlider4;
     private javax.swing.JSpinner jSpinner5;
-    private javax.swing.JSpinner jSpinner6;
     private javax.swing.JLabel lblArea;
+    private javax.swing.JSlider oxygenSlider;
     private javax.swing.JCheckBox positionCheckBox;
     private javax.swing.JSlider sliderPosition;
     private javax.swing.JTextArea txtArea;

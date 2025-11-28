@@ -147,6 +147,5 @@ This project is free to use for learning and experimentation.
 ---
 
 ## 🙌 Author
-Developed by Pramuditha Lakshan as part of learning and exploring Java GUI development
 
 Developed by **Pramuditha Lakshan** as part of learning and exploring Java GUI development.
